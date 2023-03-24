@@ -16,7 +16,6 @@ root.render(
   // <React.StrictMode>
   //   <App />
   // </React.StrictMode>
-  
     <Router>
     <Routes> 
        <Route path='/' element={<LandingPage />} />
