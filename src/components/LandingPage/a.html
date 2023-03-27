@@ -1,0 +1,152 @@
+<html>
+  <head>
+    <title>Login with Polybase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@polybase/client@0.3/dist/bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@polybase/auth@0.3/dist/bundle.min.js"></script>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+      }
+
+      h3 {
+        margin: 0;
+        padding-bottom: 3px;
+      }
+
+      div {
+        margin-bottom: 15px;
+      }
+
+      code {
+        margin-top: 10px;
+        border-radius: 5px;
+        padding: 5px;
+        background: #eaeaea;
+        display: block;
+        overflow-x: auto;
+      }
+
+      pre {
+        margin: 0;
+      }
+    </style>
+    <script>
+      const client = new polybase.Polybase();
+      const auth = new polybase_auth.Auth();
+
+      client.signer(async (data) => {
+        console.log("sign", data);
+        return {
+          h: "eth-personal-sign",
+          sig: await auth.ethPersonalSign(data)
+        };
+      });
+
+      window.onload = () => {
+        auth.onAuthUpdate((auth) => {
+          console.log("auth", auth);
+          if (!document.getElementById("auth")) return;
+          document.getElementById("auth").innerText = auth
+            ? JSON.stringify(auth, null, 2)
+            : "null";
+        });
+      };
+
+      async function signIn(force) {
+        const res = await auth.signIn({ force });
+        client.signer(async (data) => {
+          console.log(data);
+          return {
+            h: "eth-personal-sign",
+            sig: await auth.ethPersonalSign(data)
+          };
+        });
+        console.log("signIn", res);
+      }
+
+      async function signOut() {
+        const res = await auth.signOut();
+        console.log("signOut", res);
+      }
+
+      async function sign() {
+        // Sign input value
+        const signed = await auth.ethPersonalSign(
+          document.getElementById("input").value
+        );
+
+        // Save result to HTML
+        document.getElementById("signed").innerText = "Signed: " + signed;
+      }
+
+      async function add() {
+        document.getElementById("add").innerText = "Loading...";
+
+        // Send create request to Polybase
+        const res = await client
+          .collection("test/hello/world")
+          .create([`${Date.now()}`]);
+
+        // Save result to HTML
+        document.getElementById("add").innerText = JSON.stringify(
+          res.data,
+          null,
+          2
+        );
+      }
+
+      async function update() {
+        document.getElementById("update").innerText = "Loading...";
+
+        // Update record in Polybase
+        const res = await client
+          .collection("test/hello/world")
+          .record(document.getElementById("record").value)
+          .call("setName", [document.getElementById("name").value]);
+
+        // Save result to HTML
+        document.getElementById("update").innerText = JSON.stringify(
+          res.data,
+          null,
+          2
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <div>
+      <h3>Sign In</h3>
+      <button onclick="signIn()">Sign In</button>
+      <button onclick="signIn(true)">Sign In (Force)</button>
+      <button onclick="signOut()">Sign Out</button>
+      <code><pre id="auth">Auth: loading...</pre></code>
+    </div>
+    <div>
+      <h3>Ethereum Personal Sign</h3>
+      <input id="input" value="Hello World" />
+      <button onclick="sign()">Sign</button>
+      <code><pre id="signed"></pre></code>
+    </div>
+    <div>
+      <h3>Add Record</h3>
+      <button onclick="add()">Add</button>
+      <code><pre id="add"></pre></code>
+    </div>
+    <div>
+      <h3>Update Record</h3>
+      <input id="record" value="" placeholder="record id" />
+      <input id="name" value="" placeholder="name" />
+      <button onclick="update()">Update</button>
+      <code><pre id="update"></pre></code>
+    </div>
+    <div>
+      <h3>Useful Links</h3>
+      <a href="https://polybase.xyz/docs" target="_blank">Docs</a>
+      <a href="https://explorer.testnet.polybase.xyz" target="_blank"
+        >Explorer</a
+      >
+    </div>
+  </body>
+</html>

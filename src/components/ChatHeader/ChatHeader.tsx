@@ -31,7 +31,7 @@ const ChatHeader: FC = (props) => {
 			>
 				<i className="bi bi-list text-white"></i>
 			</button>
-			<div className="fs-4 text-white">SafeChat</div>
+			<div className="fs-4 text-white">secchat</div>
 			<div className="ms-auto">
                 <HeaderNotification />
             </div>

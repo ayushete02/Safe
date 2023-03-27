@@ -107,7 +107,7 @@ const Footer = () => {
   </div>
 
   <div className="p-4 text-center text-white">
-    © 2023 Copyright SafeChat
+    © 2023 Copyright secchat
     </div>
 </footer>
     </div>

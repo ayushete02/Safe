@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink  } from "react-router-dom";
 
+
 const Navbar = () => {
   return (
     <div>
@@ -21,6 +22,7 @@ const Navbar = () => {
        
         <div className="flex items-center lg:ml-auto">
           <button type="button" className="inline-block px-10  py-2 bg-[#170E5F] text-white font-medium text-md leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-mdb-ripple="true" data-mdb-ripple-color="light"><NavLink className=" text-white no-underline" to="/secchat">Safe Chat</NavLink></button>
+          
         </div>
       </div>
     </nav>
